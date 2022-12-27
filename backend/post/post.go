@@ -3,7 +3,6 @@ package post
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -30,16 +29,22 @@ func PostHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
 	if m.Message == "" {
 		http.Error(w, "wrong data", http.StatusBadRequest)
 		return
 	}
-	fmt.Println("FIRST ", m.Message)
-	// stm, err := db.Prepare("INSERT INTO nwita(content) VALUES(?) RETURNING content")
-	_, err := db.Exec("INSERT INTO nwita VALUES(?) RETURNING content", m.Message)
+
+	stm, err := db.Prepare("INSERT INTO nwita(content) VALUES(?)")
 	if err != nil {
-		http.Error(w, "could not save data", http.StatusBadRequest)
+		http.Error(w, "could create query", http.StatusInternalServerError)
 	}
+	stm.Close()
+	_, err = stm.Exec(m.Message)
+	if err != nil {
+		http.Error(w, "could not save data", http.StatusInternalServerError)
+	}
+
 	response.Status = 200
 	response.Message = m.Message
 

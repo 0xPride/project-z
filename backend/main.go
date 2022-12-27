@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
+	// "fmt"
 	"log"
 	"net/http"
 
@@ -36,5 +36,30 @@ func main() {
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("server running on http://localhost:8080")
 }
+
+// func main() {
+// 	db, err := sql.Open("sqlite3", "./database.db")
+// 	if err != nil {
+// 		log.Fatal("could not open db ", err.Error())
+// 	}
+// 	sta, err := db.Prepare("INSERT INTO nwita(content) VALUES(?)")
+// 	_, err = sta.Exec("wassup madafaka")
+// 	sta.Close()
+// 	if err != nil {
+// 		log.Fatal("cant insert to db ", err.Error())
+// 	}
+// 	res, err := db.Query("SELECT * FROM nwita")
+// 	if err != nil {
+// 		log.Fatal(err.Error())
+// 	}
+// 	var id int32
+// 	var content string
+// 	// res.Next()
+// 	for res.Next() {
+// 		res.Scan(&id, &content)
+// 		log.Println(id, " ", content)
+// 	}
+// 	res.Close()
+// 	db.Close()
+// }
