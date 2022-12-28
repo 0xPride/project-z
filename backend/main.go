@@ -1,17 +1,19 @@
 package main
 
 import (
-	"database/sql"
 	// "fmt"
 	"log"
 	"net/http"
 
+	"github.com/0xpride/project-z/get"
 	"github.com/0xpride/project-z/post"
-	_ "github.com/mattn/go-sqlite3"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var (
-	db *sql.DB
+	db *gorm.DB
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -19,19 +21,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		// handle post request
 		post.PostHandler(w, r, db)
 	} else if r.Method == "GET" {
-
+		get.GetHandler(w, r, db)
 	} else {
 		// 404 not found
 	}
 }
 
 func main() {
-	http.HandleFunc("/", handler)
-	db, err := sql.Open("sqlite3", "database.db")
+
+	d, err := gorm.Open(sqlite.Open("database.db"), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
-		log.Fatal("cant open database.db file", err.Error())
+		log.Fatal("could not open db duo to: ", err.Error())
 	}
-	defer db.Close()
+	d.AutoMigrate(&post.Nwita{})
+
+	db = d
+	http.HandleFunc("/", handler)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)

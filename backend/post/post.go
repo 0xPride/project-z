@@ -1,9 +1,10 @@
 package post
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
+
+	"gorm.io/gorm"
 )
 
 type message struct {
@@ -12,14 +13,17 @@ type message struct {
 
 type res struct {
 	Message string
-	Status  int32
 }
 
-func PostHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+type Nwita struct {
+	gorm.Model
+	Content string
+}
+
+func PostHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var m message
 	var response res
 
-	// check if json in header
 	if r.Header.Get("Content-Type") != "application/json" {
 		http.Error(w, "json is the only supported format", http.StatusBadRequest)
 		return
@@ -35,23 +39,20 @@ func PostHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	stm, err := db.Prepare("INSERT INTO nwita(content) VALUES(?)")
-	if err != nil {
-		http.Error(w, "could create query", http.StatusInternalServerError)
-	}
-	stm.Close()
-	_, err = stm.Exec(m.Message)
-	if err != nil {
-		http.Error(w, "could not save data", http.StatusInternalServerError)
+	res := db.Create(&Nwita{Content: m.Message})
+
+	if res.Error != nil {
+		// http.Error(w, "could not create record in db", http.)
 	}
 
-	response.Status = 200
 	response.Message = m.Message
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 
 	b, err := json.Marshal(&response)
 	if err != nil {
-		response.Status = 400
 		response.Message = "could not response with inserted data as json"
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 	w.Write(b)
 }
