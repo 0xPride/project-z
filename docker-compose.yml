@@ -1,0 +1,22 @@
+version: "3.0"
+
+services:
+  backend:
+    build: ./backend
+    networks:
+      - backend
+    
+  frontend:
+    build: ./frontend
+    networks:
+      - backend
+
+  proxy:
+    build: ./proxy
+    networks:
+      - backend
+    ports:
+      - 3000:80
+
+networks:
+  backend:
