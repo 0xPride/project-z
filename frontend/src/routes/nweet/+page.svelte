@@ -1,12 +1,8 @@
 <script lang="ts">
-    import Container from "$lib/Container.svelte";
-    import Header from "$lib/Header.svelte";
-    import { json } from "@sveltejs/kit";
-
-    let textValue: string;
+    let messageContent: string;
     function handleSubmit() {
         const data = {
-            message: textValue
+            message: messageContent
         };
         fetch('/nweets', {
             method: 'POST',
@@ -22,20 +18,16 @@
     <title>Nweetting</title>
 </svelte:head>
 
-<Container>
-    <Header />
+<div class="note">
+    <span class="sec-title">Note</span>
+    <span>Please be respectful and responsible in your messages.<br>we trust you!</span>
+</div>
 
-    <div class="note">
-        <span class="sec-title">Note</span>
-        <span>Please be respectful and responsible in your messages.<br>we trust you!</span>
-    </div>
-
-    <div class="form">
-        <span class="sec-title">Message</span>
-        <textarea id="content" bind:value={textValue} />
-        <button on:click={handleSubmit}>Publish</button>
-    </div>
-</Container>
+<div class="form">
+    <span class="sec-title">Message</span>
+    <textarea id="content" bind:value={messageContent} />
+    <button on:click={handleSubmit}>Publish</button>
+</div>
 
 <style>
     .sec-title {

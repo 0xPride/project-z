@@ -10,6 +10,7 @@
         flex-direction: column;
         max-width: 750px;
         margin: auto;
-        widows: 100%;
+        width: 100%;
+        padding: 0 30px;
     }
 </style>

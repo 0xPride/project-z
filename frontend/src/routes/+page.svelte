@@ -1,11 +1,10 @@
 <script lang="ts">
-    import Container from "$lib/Container.svelte";
     import PostCard from "$lib/PostCard.svelte";
     import Separator from "$lib/Separator.svelte";
-    import Header from "$lib/Header.svelte";
     import { onMount } from "svelte";
+    import type { Nweet } from "$lib/types/nweet.type";
 
-    let Posts = [];
+    let Posts: Nweet[] = [];
     onMount(async () => {
         const data = await fetch('/nweets', {
 			method: 'GET',
@@ -23,10 +22,8 @@
     <title>Nweets</title>
 </svelte:head>
 
-<Container>
-    <Header />
-    {#each Posts as post}
-        <PostCard Data={post} />
-        <Separator />
-    {/each}
-</Container>
+
+{#each Posts as post}
+    <PostCard Data={post} />
+    <Separator />
+{/each}

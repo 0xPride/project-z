@@ -1,5 +1,6 @@
 <script lang="ts">
-    export let Data: any;
+    import type { Nweet } from "$lib/types/nweet.type";
+    export let Data: Nweet;
 </script>
 
 <div class="card">
@@ -10,6 +11,5 @@
     .card {
         display: block;
         line-height: 1.6rem;
-        padding: 0 30px;
     }
 </style>

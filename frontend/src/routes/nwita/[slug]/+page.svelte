@@ -1,13 +1,6 @@
 <script lang="ts">
-    /** @type {import('./$types').PageData} */
-    import Container from "$lib/Container.svelte";
-    import Header from "$lib/Header.svelte";
-    export let data;
+    import type { Nweet } from "$lib/types/nweet.type";
+    export let data: Nweet;
 </script>
 
-<Container>
-    <Header />
-    <p>
-        {data.content}
-    </p>
-</Container>
+<p>{data.Content}</p>
