@@ -3,7 +3,7 @@
 </script>
 
 <div class="card">
-    <p class="content">{Data.content}</p>
+    <p class="content">{Data.Content}</p>
 </div>
 
 <style>

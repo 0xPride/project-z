@@ -1,10 +1,20 @@
 <script lang="ts">
     import Container from "$lib/Container.svelte";
     import Header from "$lib/Header.svelte";
+    import { json } from "@sveltejs/kit";
 
     let textValue: string;
     function handleSubmit() {
-        console.log(textValue);
+        const data = {
+            message: textValue
+        };
+        fetch('/nweets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
     }
 </script>
 
