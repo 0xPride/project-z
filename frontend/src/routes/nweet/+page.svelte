@@ -1,7 +1,20 @@
 <script lang="ts">
-    let messageContent: string;
-    function handleSubmit() {
-        fetch("/nweets", {
+    import { goto } from "$app/navigation";
+
+    let messageContent: string = '';
+    $: status = `${512 - messageContent.length > 0 ? 512 - messageContent.length + ' charcter left' : 'Message cannot be more than 512 character'}`
+    let submitButton : HTMLButtonElement;
+    async function handleSubmit() {
+
+        if (messageContent.length > 512 || messageContent.length == 0) {
+            if (messageContent.length == 0)
+                inform('Message cannot be empty')
+            else
+                inform('Message too short')
+            return;
+        }
+
+        const req = fetch("/nweets", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -10,6 +23,14 @@
                 Content: messageContent,
             }),
         });
+        submitButton.setAttribute('disabled', 'true');
+        inform('Message being sent ...');
+        await req;
+        goto('/');
+    }
+
+    function inform(message: string) {
+        status = message;
     }
 </script>
 
@@ -19,16 +40,14 @@
 
 <div class="note">
     <span class="sec-title">Note</span>
-    <span
-        >Please be respectful and responsible in your messages.<br />we trust
-        you!</span
-    >
+    <span>Please be respectful and responsible in your messages.<br />we trust you!</span>
 </div>
 
 <div class="form">
     <span class="sec-title">Message</span>
     <textarea id="content" bind:value={messageContent} />
-    <button on:click={handleSubmit}>Publish</button>
+    <span class="status">{status}</span>
+    <button bind:this={submitButton} on:click={handleSubmit}>Publish</button>
 </div>
 
 <style>
@@ -73,6 +92,10 @@
     button:hover {
         cursor: pointer;
         transform: translateY(-2px);
+    }
+
+    button:disabled {
+        opacity: 0.8;
     }
 
     .note {
