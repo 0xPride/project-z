@@ -1,16 +1,15 @@
 <script lang="ts">
     let messageContent: string;
     function handleSubmit() {
-        const data = {
-            message: messageContent
-        };
-        fetch('/nweets', {
-            method: 'POST',
+        fetch("/nweets", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(data)
-        })
+            body: JSON.stringify({
+                Content: messageContent,
+            }),
+        });
     }
 </script>
 
@@ -20,7 +19,10 @@
 
 <div class="note">
     <span class="sec-title">Note</span>
-    <span>Please be respectful and responsible in your messages.<br>we trust you!</span>
+    <span
+        >Please be respectful and responsible in your messages.<br />we trust
+        you!</span
+    >
 </div>
 
 <div class="form">
@@ -34,7 +36,7 @@
         font-weight: bold;
         margin-bottom: 10px;
         font-size: 1.3rem;
-        padding-bottom: .5rem;
+        padding-bottom: 0.5rem;
         width: 100%;
         display: block;
     }

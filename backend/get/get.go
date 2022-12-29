@@ -12,7 +12,7 @@ import (
 func GetHandler(w http.ResponseWriter, r *http.Request, db *gorm.DB) {
 	var nwitat [10]post.Nwita
 
-	queryRes := db.Limit(10).Find(&nwitat)
+	queryRes := db.Order("id desc").Limit(10).Find(&nwitat)
 	for _, v := range nwitat {
 		log.Println(v)
 	}
